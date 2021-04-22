@@ -1,0 +1,48 @@
+---
+-
+  name: This playbook is for Docker Installation and setup
+  hosts: localhost
+  connection: local
+
+  tasks:
+    -
+      name: Remove the packages for pre-req
+      yum:
+        name:
+          - docker
+          - docker-client
+          - docker-client-latest
+          - docker-common
+          - docker-latest
+          - docker-latest-logrotate
+          - docker-logrotate
+          - docker-engine
+        state: absent
+
+    -
+      name: Installing pre-req package for Docker
+      yum:
+        name: yum-utils
+        state: present
+
+    -
+      name: Adding docker official repo
+      get_url:
+        dest: /etc/yum.repos.d/docker-ce.repo
+        url: https://download.docker.com/linux/centos/docker-ce.repo
+
+    -
+      name: Installing Docker Software
+      yum:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+
+    -
+      name: Starting and enabling Docker Services
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
